@@ -38,6 +38,9 @@ public class CanteenService {
         if(updatedCanteen.getCapacity() > 0){
             canteen.setCapacity(updatedCanteen.getCapacity());
         }
+        if(updatedCanteen.getWorkingHours() != null){
+            canteen.setWorkingHours(updatedCanteen.getWorkingHours());
+        }
         return canteenRepository.save(canteen);
     }
 

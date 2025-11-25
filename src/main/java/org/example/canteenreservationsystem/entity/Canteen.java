@@ -26,9 +26,8 @@ public class Canteen {
     @Positive
     private int capacity;
 
-    private LocalTime breakfastTime;
-    private LocalTime lunchTime;
-    private LocalTime dinnerTime;
+    @ElementCollection
+    private List<MealSlot> workingHours;
 
     @OneToMany(mappedBy = "canteen", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
