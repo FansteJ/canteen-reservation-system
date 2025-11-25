@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/FansteJ/canteen-reservation-system/compare/v1.2.0...v1.3.0) (2025-11-25)
+
+
+### Features
+
+* add CanteenService, update ReservationService and StudentService ([8717eca](https://github.com/FansteJ/canteen-reservation-system/commit/8717ecaa62ba9b446c4c0aff6f112cb0c7c25b01))
+* add ReservationService ([8d07cee](https://github.com/FansteJ/canteen-reservation-system/commit/8d07cee17ca3b04e4c5f554f5a0060902660c436))
+* add StudentService ([b2bd4b8](https://github.com/FansteJ/canteen-reservation-system/commit/b2bd4b8821e96b1cf25068cfe2e8fe1d8ae8e8d8))
+
 ## [1.2.0](https://github.com/FansteJ/canteen-reservation-system/compare/v1.1.0...v1.2.0) (2025-11-25)
 
 
