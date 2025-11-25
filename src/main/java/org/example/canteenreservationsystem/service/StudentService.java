@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example.canteenreservationsystem.service;
 
 import lombok.AllArgsConstructor;
 import org.example.canteenreservationsystem.entity.Student;

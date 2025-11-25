@@ -1,4 +1,4 @@
-package org.example.service;
+package org.example.canteenreservationsystem.service;
 
 import lombok.AllArgsConstructor;
 import org.example.canteenreservationsystem.entity.Canteen;
@@ -33,6 +33,12 @@ public class ReservationService {
         reservation.setDuration(duration);
         reservation.setStatus(Status.ACTIVE);
 
+        return reservationRepository.save(reservation);
+    }
+
+    public Reservation cancelReservation(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new RuntimeException("Reservation not found"));
+        reservation.setStatus(Status.CANCELLED);
         return reservationRepository.save(reservation);
     }
 
