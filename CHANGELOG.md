@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/FansteJ/canteen-reservation-system/compare/v1.3.0...v1.4.0) (2025-11-25)
+
+
+### Features
+
+* add MealSlot, modify Canteen to use MealSlot, update CanteenService ([6b4fb2e](https://github.com/FansteJ/canteen-reservation-system/commit/6b4fb2e411116fd9e40a3270becb59690eb96e96))
+
 ## [1.3.0](https://github.com/FansteJ/canteen-reservation-system/compare/v1.2.0...v1.3.0) (2025-11-25)
 
 
