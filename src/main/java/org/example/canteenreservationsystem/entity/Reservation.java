@@ -16,9 +16,11 @@ public class Reservation {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "student_id")
     private Student student;
 
     @ManyToOne
+    @JoinColumn(name = "canteen_id")
     private Canteen canteen;
 
     private LocalDate reservationDate;

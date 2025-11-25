@@ -1,14 +1,13 @@
 package org.example.canteenreservationsystem.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,6 +26,9 @@ public class Student {
     @Email
     @NotBlank
     private String email;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
 
     private boolean admin;
 }
