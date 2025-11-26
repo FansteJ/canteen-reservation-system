@@ -36,8 +36,11 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public Reservation cancelReservation(Long reservationId) {
+    public Reservation cancelReservation(Long reservationId, Long studentId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new RuntimeException("Reservation not found"));
+        if(!reservation.getStudent().getId().equals(studentId)) {
+            throw new RuntimeException("You are not allowed to cancel this reservation!");
+        }
         reservation.setStatus(Status.CANCELLED);
         return reservationRepository.save(reservation);
     }

@@ -18,16 +18,17 @@ public class StudentController {
     private final StudentService studentService;
 
     @PostMapping
-    public ResponseEntity<Student> createStudent(@RequestBody StudentRequest request) {
-        System.out.println(request);
+    public ResponseEntity<StudentResponse> createStudent(@RequestBody StudentRequest request) {
         Student student = studentService.createStudent(request.getName(), request.getEmail(), request.isAdmin());
-        return new ResponseEntity<>(student, HttpStatus.CREATED);
+        StudentResponse studentResponse = new StudentResponse(student);
+        return new ResponseEntity<>(studentResponse, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudent(@PathVariable Long id) {
+    public ResponseEntity<StudentResponse> getStudent(@PathVariable Long id) {
         Student student = studentService.getStudent(id);
-        return ResponseEntity.ok(student);
+        StudentResponse studentResponse = new StudentResponse(student);
+        return ResponseEntity.ok(studentResponse);
     }
 
     @Getter
@@ -37,5 +38,22 @@ public class StudentController {
         private String email;
         @JsonProperty("isAdmin")
         private boolean admin;
+    }
+
+    @Getter
+    @Setter
+    public static class StudentResponse{
+        private Long id;
+        private String name;
+        private String email;
+        @JsonProperty("isAdmin")
+        private boolean admin;
+
+        public StudentResponse(Student student) {
+            this.id = student.getId();
+            this.name = student.getFirstName() + " " + student.getLastName();
+            this.email = student.getEmail();
+            this.admin = student.isAdmin();
+        }
     }
 }

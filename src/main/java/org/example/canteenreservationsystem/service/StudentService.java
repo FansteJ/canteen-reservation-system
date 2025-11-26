@@ -14,8 +14,9 @@ public class StudentService {
 
     public Student createStudent(String name, String email, boolean isAdmin) {
         Student student = new Student();
-        student.setFirstName(name.split(" ")[0]);
-        student.setLastName(name.split(" ")[1]);
+        String parts[] = name.split(" ", 2);
+        student.setFirstName(parts[0]);
+        student.setLastName(parts.length > 1 ? parts[1] : "");
         student.setEmail(email);
         student.setAdmin(isAdmin);
         return studentRepository.save(student);
