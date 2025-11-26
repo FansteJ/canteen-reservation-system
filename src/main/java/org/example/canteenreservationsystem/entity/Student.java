@@ -1,5 +1,6 @@
 package org.example.canteenreservationsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Email;
@@ -30,5 +31,6 @@ public class Student {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
 
+    @JsonProperty("isAdmin")
     private boolean admin;
 }

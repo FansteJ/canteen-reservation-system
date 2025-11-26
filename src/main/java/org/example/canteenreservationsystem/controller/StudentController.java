@@ -1,8 +1,10 @@
 package org.example.canteenreservationsystem.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.example.canteenreservationsystem.entity.Student;
 import org.example.canteenreservationsystem.service.StudentService;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ public class StudentController {
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody StudentRequest request) {
+        System.out.println(request);
         Student student = studentService.createStudent(request.getName(), request.getEmail(), request.isAdmin());
         return new ResponseEntity<>(student, HttpStatus.CREATED);
     }
@@ -28,9 +31,11 @@ public class StudentController {
     }
 
     @Getter
+    @Setter
     public static class StudentRequest {
         private String name;
         private String email;
-        private boolean isAdmin;
+        @JsonProperty("isAdmin")
+        private boolean admin;
     }
 }
