@@ -2,6 +2,7 @@ package org.example.canteenreservationsystem.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.example.canteenreservationsystem.entity.Canteen;
 import org.example.canteenreservationsystem.entity.MealSlot;
 import org.example.canteenreservationsystem.entity.Student;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @RestController
@@ -31,32 +33,36 @@ public class CanteenController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Canteen>> getAllCanteens() {
-        return ResponseEntity.ok(canteenService.getAllCanteens());
+    public ResponseEntity<List<CanteenResponse>> getAllCanteens() {
+        return ResponseEntity.ok(canteenService.getAllCanteens().stream().map(CanteenResponse::new).collect(Collectors.toList()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Canteen> getCanteen(@PathVariable Long id) {
-        return ResponseEntity.ok(canteenService.getCanteenById(id));
+    public ResponseEntity<CanteenResponse> getCanteen(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(new CanteenResponse(canteenService.getCanteenById(id)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Canteen> updateCanteen(@PathVariable Long id, @RequestHeader("studentId") Long studentId, @RequestBody CreateCanteenRequest request) {
+    public ResponseEntity<CanteenResponse> updateCanteen(@PathVariable("id") Long id, @RequestHeader("studentId") Long studentId, @RequestBody CreateCanteenRequest request) {
         Student student = studentService.getStudent(studentId);
         if(student.isAdmin()) {
             Canteen updated = new Canteen();
-            updated.setName(request.getName());
-            updated.setLocation(request.getLocation());
-            updated.setCapacity(request.getCapacity());
-            updated.setWorkingHours(request.getWorkingHours());
+            if(request.getName() != null)
+                updated.setName(request.getName());
+            if(request.getLocation() != null)
+                updated.setLocation(request.getLocation());
+            if(request.getCapacity() != null)
+                updated.setCapacity(request.getCapacity());
+            if(request.getWorkingHours() != null)
+                updated.setWorkingHours(request.getWorkingHours());
 
-            return ResponseEntity.ok(canteenService.updateCanteen(id, updated));
+            return ResponseEntity.ok(new CanteenResponse(canteenService.updateCanteen(id, updated)));
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Canteen> deleteCanteen(@PathVariable Long id, @RequestHeader("studentId") Long studentId) {
+    public ResponseEntity<Canteen> deleteCanteen(@PathVariable("id") Long id, @RequestHeader("studentId") Long studentId) {
         Student student = studentService.getStudent(studentId);
         if(student.isAdmin()) {
             canteenService.deleteCanteen(id);
@@ -71,5 +77,25 @@ public class CanteenController {
         private String location;
         private Integer capacity;
         private List<MealSlot> workingHours;
+    }
+
+    @Getter
+    @Setter
+    public static class CanteenResponse{
+        private Long id;
+        private String name;
+        private String location;
+        private Integer capacity;
+        private List<MealSlot> workingHours;
+
+        public CanteenResponse() {}
+
+        public CanteenResponse(Canteen canteen) {
+            this.id = canteen.getId();
+            this.name = canteen.getName();
+            this.location = canteen.getLocation();
+            this.capacity = canteen.getCapacity();
+            this.workingHours = canteen.getWorkingHours();
+        }
     }
 }

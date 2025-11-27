@@ -7,7 +7,9 @@ import org.example.canteenreservationsystem.entity.Reservation;
 import org.example.canteenreservationsystem.entity.Status;
 import org.example.canteenreservationsystem.repository.CanteenRepository;
 import org.example.canteenreservationsystem.repository.ReservationRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class CanteenService {
     }
 
     public Canteen getCanteenById(Long id) {
-        return canteenRepository.findById(id).orElseThrow(() -> new RuntimeException("Canteen not found"));
+        return canteenRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Canteen not found"));
     }
 
     public Canteen updateCanteen(Long id, Canteen updatedCanteen) {
