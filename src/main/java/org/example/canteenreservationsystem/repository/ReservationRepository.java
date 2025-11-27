@@ -2,6 +2,7 @@ package org.example.canteenreservationsystem.repository;
 
 import org.example.canteenreservationsystem.entity.Canteen;
 import org.example.canteenreservationsystem.entity.Reservation;
+import org.example.canteenreservationsystem.entity.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

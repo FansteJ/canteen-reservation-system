@@ -27,6 +27,9 @@ public class CanteenService {
         Canteen canteen = new Canteen();
         if(name==null || name.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name cannot be empty");
+        if (canteenRepository.findByName(name).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Canteen with this name already exists");
+        }
         canteen.setName(name);
         if(location==null || location.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location cannot be empty");

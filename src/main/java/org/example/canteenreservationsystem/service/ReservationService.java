@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -28,6 +29,14 @@ public class ReservationService {
                 HttpStatus.BAD_REQUEST, "Student not found"));
         Canteen canteen = canteenRepository.findById(canteenId).orElseThrow(() -> new ResponseStatusException(
                 HttpStatus.BAD_REQUEST, "Canteen not found"));
+
+        if (date.isBefore(LocalDate.now())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot create reservation for past date");
+        }
+
+        if (time.getMinute() != 0 && time.getMinute() != 30) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reservation must start at full or half hour");
+        }
 
         LocalTime reservationEnd = time.plusMinutes(duration);
 
@@ -46,6 +55,27 @@ public class ReservationService {
                     HttpStatus.BAD_REQUEST,
                     "Reservation duration should be between 30 and 60 minutes"
             );
+        }
+
+        List<Reservation> studentReservations = reservationRepository.findByStudentId(studentId).stream()
+                .filter(r -> r.getDate().equals(date))
+                .collect(Collectors.toList());
+
+        for (Reservation r : studentReservations) {
+            LocalTime existingStart = r.getTime();
+            LocalTime existingEnd = r.getTime().plusMinutes(r.getDuration());
+            LocalTime newStart = time;
+            LocalTime newEnd = time.plusMinutes(duration);
+
+            boolean overlap = newStart.isBefore(existingEnd) && newEnd.isAfter(existingStart);
+            if (overlap) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You already have a reservation in this time interval");
+            }
+        }
+
+        int reserved = reservationRepository.countByCanteenAndDateAndTimeRange(canteen, date, time, time.plusMinutes(duration));
+        if (reserved >= canteen.getCapacity()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No remaining capacity for this slot");
         }
 
         Reservation reservation = new Reservation();
