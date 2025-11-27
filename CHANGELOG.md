@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/FansteJ/canteen-reservation-system/compare/v1.5.0...v1.6.0) (2025-11-27)
+
+
+### Features
+
+* add test class ([44e307a](https://github.com/FansteJ/canteen-reservation-system/commit/44e307af0a66122a1f71d83a8c2c0363648ada61))
+
 ## [1.5.0](https://github.com/FansteJ/canteen-reservation-system/compare/v1.4.0...v1.5.0) (2025-11-27)
 
 
