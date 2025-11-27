@@ -3,6 +3,7 @@ package org.example.canteenreservationsystem.controller;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.canteenreservationsystem.dto.CanteenStatusResponse;
 import org.example.canteenreservationsystem.entity.Canteen;
 import org.example.canteenreservationsystem.entity.MealSlot;
 import org.example.canteenreservationsystem.entity.Student;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,6 +72,19 @@ public class CanteenController {
             return ResponseEntity.noContent().build();
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<List<CanteenStatusResponse>> getCanteenStatus(
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate,
+            @RequestParam("startTime") LocalTime startTime,
+            @RequestParam("endTime") LocalTime endTime,
+            @RequestParam("duration") int duration
+    ) {
+        return ResponseEntity.ok(
+                canteenService.getStatus(startDate, endDate, startTime, endTime, duration)
+        );
     }
 
     @Getter

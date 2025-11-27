@@ -26,7 +26,7 @@ public class ReservationController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ReservationResponse> cancelReservation(@PathVariable Long id, @RequestHeader("studentId") Long studentId) {
+    public ResponseEntity<ReservationResponse> cancelReservation(@PathVariable("id") Long id, @RequestHeader("studentId") Long studentId) {
         Reservation reservation = reservationService.cancelReservation(id, studentId);
         ReservationResponse reservationResponse = new ReservationResponse(reservation);
         return ResponseEntity.ok(reservationResponse);
@@ -58,8 +58,8 @@ public class ReservationController {
             this.status = reservation.getStatus().name();
             this.studentId = reservation.getStudent().getId();
             this.canteenId = reservation.getCanteen().getId();
-            this.date = reservation.getReservationDate();
-            this.time = reservation.getReservationTime();
+            this.date = reservation.getDate();
+            this.time = reservation.getTime();
             this.duration = reservation.getDuration();
         }
     }

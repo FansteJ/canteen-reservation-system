@@ -23,9 +23,9 @@ public class Reservation {
     @JoinColumn(name = "canteen_id")
     private Canteen canteen;
 
-    private LocalDate reservationDate;
+    private LocalDate date;
 
-    private LocalTime reservationTime;
+    private LocalTime time;
 
     private int duration;
 

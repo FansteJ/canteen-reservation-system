@@ -28,8 +28,8 @@ public class ReservationService {
         Reservation reservation = new Reservation();
         reservation.setStudent(student);
         reservation.setCanteen(canteen);
-        reservation.setReservationDate(date);
-        reservation.setReservationTime(time);
+        reservation.setDate(date);
+        reservation.setTime(time);
         reservation.setDuration(duration);
         reservation.setStatus(Status.ACTIVE);
 
