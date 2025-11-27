@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/FansteJ/canteen-reservation-system/compare/v1.4.0...v1.5.0) (2025-11-27)
+
+
+### Features
+
+* add CanteenController and modify Student and Canteen entities ([ddb127a](https://github.com/FansteJ/canteen-reservation-system/commit/ddb127a9999184fcd9bd253ef373369b6fe5d29a))
+* add getStatus method in CanteenService (for finding about available meal slots) ([2a5cb89](https://github.com/FansteJ/canteen-reservation-system/commit/2a5cb8905a93cc0a67e9e821f1646066cdd71112))
+* add more checks in services ([6432597](https://github.com/FansteJ/canteen-reservation-system/commit/6432597d2a2e55b7eccff76936071b327aceb419))
+* add ReservationController and modify StudentController ([654a22d](https://github.com/FansteJ/canteen-reservation-system/commit/654a22dfb76910dc648ec9c6be4d658e434d7596))
+* add StudentController ([d1ee084](https://github.com/FansteJ/canteen-reservation-system/commit/d1ee08404613138c15e84e1fc06fe9e53da14c26))
+
+
+### Bug Fixes
+
+* modify services and controllers to pass tests ([0d7b003](https://github.com/FansteJ/canteen-reservation-system/commit/0d7b003ddf57ce95da6632744845ab987cfab465))
+* modify services/controllers ([74c8703](https://github.com/FansteJ/canteen-reservation-system/commit/74c8703af565b6f250f968db5a1581ad16629e48))
+
 ## [1.4.0](https://github.com/FansteJ/canteen-reservation-system/compare/v1.3.0...v1.4.0) (2025-11-25)
 
 
