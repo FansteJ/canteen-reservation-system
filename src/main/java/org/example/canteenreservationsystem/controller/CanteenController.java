@@ -87,6 +87,20 @@ public class CanteenController {
         );
     }
 
+    @GetMapping("/{id}/status")
+    public ResponseEntity<CanteenStatusResponse> getCanteenStatusForCanteen(
+            @PathVariable("id") Long id,
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate,
+            @RequestParam("startTime") LocalTime startTime,
+            @RequestParam("endTime") LocalTime endTime,
+            @RequestParam("duration") int duration
+    ) {
+        return ResponseEntity.ok(
+                canteenService.getStatusForCanteen(id, startDate, endDate, startTime, endTime, duration)
+        );
+    }
+
     @Getter
     public static class CreateCanteenRequest {
         private String name;

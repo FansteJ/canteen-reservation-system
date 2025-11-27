@@ -25,9 +25,17 @@ public class CanteenService {
 
     public Canteen createCanteen(String name, String location, Integer capacity, List<MealSlot> workingHours) {
         Canteen canteen = new Canteen();
+        if(name==null || name.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name cannot be empty");
         canteen.setName(name);
+        if(location==null || location.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Location cannot be empty");
         canteen.setLocation(location);
+        if(capacity==null || capacity < 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Capacity cannot be negative");
         canteen.setCapacity(capacity);
+        if(workingHours==null || workingHours.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "WorkingHours cannot be empty");
         canteen.setWorkingHours(workingHours);
         return canteenRepository.save(canteen);
     }
@@ -42,16 +50,16 @@ public class CanteenService {
 
     public Canteen updateCanteen(Long id, Canteen updatedCanteen) {
         Canteen canteen = getCanteenById(id);
-        if(updatedCanteen.getName() != null) {
+        if (updatedCanteen.getName() != null) {
             canteen.setName(updatedCanteen.getName());
         }
-        if(updatedCanteen.getLocation() != null) {
+        if (updatedCanteen.getLocation() != null) {
             canteen.setLocation(updatedCanteen.getLocation());
         }
-        if(updatedCanteen.getCapacity() > 0){
+        if (updatedCanteen.getCapacity() > 0) {
             canteen.setCapacity(updatedCanteen.getCapacity());
         }
-        if(updatedCanteen.getWorkingHours() != null){
+        if (updatedCanteen.getWorkingHours() != null) {
             canteen.setWorkingHours(updatedCanteen.getWorkingHours());
         }
         return canteenRepository.save(canteen);
@@ -73,6 +81,9 @@ public class CanteenService {
             LocalTime endTime,
             int durationMinutes
     ) {
+        if(durationMinutes != 30 && durationMinutes != 60) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Canteen duration should be 30 or 60");
+        }
         List<Canteen> canteens = canteenRepository.findAll();
         List<CanteenStatusResponse> result = new ArrayList<>();
 
@@ -113,6 +124,49 @@ public class CanteenService {
         return result;
     }
 
+    public CanteenStatusResponse getStatusForCanteen(
+            Long id,
+            LocalDate startDate,
+            LocalDate endDate,
+            LocalTime startTime,
+            LocalTime endTime,
+            int durationMinutes
+    ) {
+        if(durationMinutes != 30 && durationMinutes != 60) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Canteen duration should be 30 or 60");
+        }
+        Canteen canteen = getCanteenById(id);
 
+        List<SlotInfo> slotInfos = new ArrayList<>();
 
+        LocalDate date = startDate;
+        while (!date.isAfter(endDate)) {
+            for (MealSlot mealSlot : canteen.getWorkingHours()) {
+
+                LocalTime slotStart = mealSlot.getFrom().isAfter(startTime) ? mealSlot.getFrom() : startTime;
+                LocalTime slotEnd = mealSlot.getTo().isBefore(endTime) ? mealSlot.getTo() : endTime;
+
+                LocalTime time = slotStart;
+                while (!time.plusMinutes(durationMinutes).isAfter(slotEnd)) {
+
+                    int reserved = reservationRepository.countByCanteenAndDateAndTimeRange(
+                            canteen, date, time, time.plusMinutes(durationMinutes)
+                    );
+
+                    slotInfos.add(new SlotInfo(
+                            date,
+                            mealSlot.getMeal(),
+                            time,
+                            canteen.getCapacity() - reserved
+                    ));
+
+                    time = time.plusMinutes(durationMinutes);
+                }
+            }
+
+            date = date.plusDays(1);
+        }
+
+        return new CanteenStatusResponse(id, slotInfos);
+    }
 }

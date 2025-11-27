@@ -1,5 +1,6 @@
 package org.example.canteenreservationsystem.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class Reservation {
 
     private LocalDate date;
 
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime time;
 
     private int duration;

@@ -17,12 +17,18 @@ public class StudentService {
     public Student createStudent(String name, String email, boolean isAdmin) {
 
         if(studentRepository.findByEmail(email).isPresent()) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
         }
         Student student = new Student();
         String parts[] = name.split(" ", 2);
+        if(parts.length != 2) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid name");
+        }
         student.setFirstName(parts[0]);
         student.setLastName(parts.length > 1 ? parts[1] : "");
+        if(email == null || email.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid email");
+        }
         student.setEmail(email);
         student.setAdmin(isAdmin);
         return studentRepository.save(student);

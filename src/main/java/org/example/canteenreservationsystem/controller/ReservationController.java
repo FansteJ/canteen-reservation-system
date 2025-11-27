@@ -1,5 +1,6 @@
 package org.example.canteenreservationsystem.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,12 +51,13 @@ public class ReservationController {
         private Long studentId;
         private Long canteenId;
         private LocalDate date;
+        @JsonFormat(pattern = "HH:mm")
         private LocalTime time;
         private Integer duration;
 
         public ReservationResponse(Reservation reservation) {
             this.id = reservation.getId();
-            this.status = reservation.getStatus().name();
+            this.status = reservation.getStatus().title();
             this.studentId = reservation.getStudent().getId();
             this.canteenId = reservation.getCanteen().getId();
             this.date = reservation.getDate();

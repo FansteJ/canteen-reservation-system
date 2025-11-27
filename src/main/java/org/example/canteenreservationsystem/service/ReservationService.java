@@ -8,7 +8,9 @@ import org.example.canteenreservationsystem.entity.Student;
 import org.example.canteenreservationsystem.repository.CanteenRepository;
 import org.example.canteenreservationsystem.repository.ReservationRepository;
 import org.example.canteenreservationsystem.repository.StudentRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,8 +24,29 @@ public class ReservationService {
     private final CanteenRepository canteenRepository;
 
     public Reservation createReservation(Long studentId, Long canteenId, LocalDate date, LocalTime time, int duration) {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
-        Canteen canteen = canteenRepository.findById(canteenId).orElseThrow(() -> new RuntimeException("Canteen not found"));
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Student not found"));
+        Canteen canteen = canteenRepository.findById(canteenId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Canteen not found"));
+
+        LocalTime reservationEnd = time.plusMinutes(duration);
+
+        boolean validSlot = canteen.getWorkingHours().stream()
+                .anyMatch(slot -> !time.isBefore(slot.getFrom()) && !reservationEnd.isAfter(slot.getTo()));
+
+        if (!validSlot) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Reservation time does not fall within any meal slot of the canteen"
+            );
+        }
+
+        if(duration!=30 && duration!=60) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Reservation duration should be between 30 and 60 minutes"
+            );
+        }
 
         Reservation reservation = new Reservation();
         reservation.setStudent(student);
@@ -37,9 +60,11 @@ public class ReservationService {
     }
 
     public Reservation cancelReservation(Long reservationId, Long studentId) {
-        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new RuntimeException("Reservation not found"));
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST, "Reservation not found"));
         if(!reservation.getStudent().getId().equals(studentId)) {
-            throw new RuntimeException("You are not allowed to cancel this reservation!");
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST, "You are not allowed to cancel this reservation!");
         }
         reservation.setStatus(Status.CANCELLED);
         return reservationRepository.save(reservation);
